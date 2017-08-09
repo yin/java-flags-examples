@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * Reads file and prints it's output. This is an example of java-flags use.
@@ -34,7 +35,13 @@ public class ReadmeExample {
 
     public static void main(String[] args) {
         try {
-            Flags.parse(args, ImmutableList.of("com.github.yin.flags.example"));
+            List<String> nonFlags = Flags.parse(args, ImmutableList.of("com.github.yin.flags.example"));
+            if (nonFlags.size() > 0) {
+                System.err.println("No arguments except flags are supported by this program");
+                Flags.printUsage("com.github.yin.flags.example");
+                System.exit(1);
+                return;
+            }
         } catch (Flags.ParseException e) {
             System.err.println(e.getMessage());
             Flags.printUsage("com.github.yin.flags.example");

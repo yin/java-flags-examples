@@ -1,15 +1,14 @@
 package com.github.yin.flags.example;
 
-import com.github.yin.flags.annotations.FlagDesc;
 import com.github.yin.flags.Flag;
 import com.github.yin.flags.Flags;
-import com.google.common.base.Strings;
+import com.github.yin.flags.annotations.FlagDesc;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Reads file and prints it's output. This is an example of java-flags use.
@@ -22,8 +21,10 @@ public class ReadmeExample {
     @FlagDesc("Specifies path to input file")
     static final Flag<String> input = Flags.create("")
             .validator((String path) -> {
-                if (Strings.isNullOrEmpty(path)) {
+                if (path == null || path.isEmpty()) {
                     throw new Flags.ParseException("Input path is empty");
+                } else if (!Files.isRegularFile(Paths.get(path))) {
+                    throw new Flags.ParseException("Input path is not regular file");
                 } else if (!Files.isReadable(Paths.get(path))) {
                     throw new Flags.ParseException("Input path is not readable");
                 }
@@ -35,6 +36,14 @@ public class ReadmeExample {
         try {
             Flags.parse(args, ImmutableList.of("com.github.yin.flags.example"));
         } catch (Flags.ParseException e) {
+            System.err.println(e.getMessage());
+            Flags.printUsage("com.github.yin.flags.example");
+            System.exit(1);
+            return;
+        }
+        // TODO yin: Default value is not validated, implement required flags
+        if (input.get().isEmpty()) {
+            System.err.println("--input is empty");
             Flags.printUsage("com.github.yin.flags.example");
             System.exit(1);
             return;
@@ -51,7 +60,7 @@ public class ReadmeExample {
     }
 
     /**
-     * Creates instance suplied by external values.
+     * Creates instance supplied by external values.
      */
     ReadmeExample(String inputfile) {
         this.inputfile = inputfile;

@@ -60,6 +60,28 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                        </configuration>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.github.yin.flags.example.ReadmeExample</mainClass>
+                    <arguments>
+                        <argument>--input</argument>
+                        <argument>src/test/resources/hello.txt</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>

@@ -1,0 +1,9 @@
+Hello World!
+
+A message from a simple text file.
+
+If you running from Maven, youcan spcify your own arguments using:
+
+````
+    mvn exec:java -Dexec.args="..."
+````
